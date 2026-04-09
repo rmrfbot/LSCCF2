@@ -376,3 +376,74 @@ void measure_offsets() {
 // . . .
 // Make your own autonomous functions here!
 // . . .
+//tylers stuff below
+
+//tylers stuff below
+
+
+
+void full_auton() {
+  // Make sure piston starts retracted
+  loader_piston.set_value(false);
+  pros::delay(200);
+  // Forward 4 feet
+  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  // Turn right 90 degrees
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // Spin up conveyor for 2 seconds (load position)
+  conveyor.move(127);
+  pros::delay(2000);
+  conveyor.move(0);
+
+  // Reverse 4 feet
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  // Offload into top goal (conveyor + offloader) for 1.5 sec
+  conveyor.move(127);
+  offloader.move(127);
+  pros::delay(1500);
+  conveyor.move(0);
+  offloader.move(0);
+
+  // Turn left 45 degrees
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // Offload again for 1.5 sec
+  conveyor.move(127);
+  offloader.move(127);
+  pros::delay(1500);
+  conveyor.move(0);
+  offloader.move(0);
+
+  // Turn right 45 degrees (back to 90)
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // Forward 4 feet to loader
+  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  // Load 6 balls: conveyor + piston for 2 sec
+  conveyor.move(127);
+  loader_piston.set_value(true);
+  pros::delay(2000);
+  conveyor.move(0);
+  loader_piston.set_value(false);
+
+  // Reverse 4 feet
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  // Offload all 6 balls
+  conveyor.move(127);
+  offloader.move(127);
+  pros::delay(4000);
+  conveyor.move(0);
+  offloader.move(0);
+}

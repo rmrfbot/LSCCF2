@@ -8,13 +8,15 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {1, 2, 3},     // Left Chassis Ports (negative port will reverse it!)
-    {-4, -5, -6},  // Right Chassis Ports (negative port will reverse it!)
+    {-1, -2, -3},     // Left Chassis Ports (negative port will reverse it!)
+    {11, 12, 13},  // Right Chassis Ports (negative port will reverse it!)
 
-    7,      // IMU Port
+    20,      // IMU Port
     4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
-    343);   // Wheel RPM = cartridge * (motor gear / wheel gear)
-
+    600);   // Wheel RPM = cartridge * (motor gear / wheel gear)
+pros::Motor conveyor(8);
+pros::Motor offloader(9);
+pros::ADIDigitalOut loader_piston('A');
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)
 //  - you should get positive values on the encoders going FORWARD and RIGHT
@@ -30,6 +32,8 @@ ez::Drive chassis(
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+  
+  
   // Print our branding over your terminal :D
   ez::ez_template_print();
 
@@ -57,7 +61,12 @@ void initialize() {
   // chassis.opcontrol_curve_buttons_right_set(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_A);
 
   // Autonomous Selector using LLEMU
-  ez::as::auton_selector.autons_add({
+    ez::as::auton_selector.autons_add({
+
+    {"Full Auton\n\nLoad, score, offload, reload, score again", full_auton},
+    {"Drive\n\nDrive forward and come back", drive_example},
+    {"Turn\n\nTurn 3 times.", turn_example},
+
       {"Drive\n\nDrive forward and come back", drive_example},
       {"Turn\n\nTurn 3 times.", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},

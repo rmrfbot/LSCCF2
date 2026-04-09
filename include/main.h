@@ -80,11 +80,12 @@ void opcontrol(void);
 }
 #endif
 
-#ifdef __cplusplus
-/**
- * You can add C++-only headers here
- */
-//#include <iostream>
-#endif
+void pushback_auton();
+void full_auton();
+
+extern pros::Motor conveyor;
+extern pros::Motor offloader;
+extern pros::ADIDigitalOut loader_piston;
 
 #endif  // _PROS_MAIN_H_
+
