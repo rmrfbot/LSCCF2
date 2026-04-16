@@ -12,10 +12,10 @@ ez::Drive chassis(
     {11, 12, 13},  // Right Chassis Ports (negative port will reverse it!)
 
     20,      // IMU Port
-    4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
-    600);   // Wheel RPM = cartridge * (motor gear / wheel gear)
+    3.25,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
+    450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 pros::Motor conveyor(8);
-pros::Motor offloader(9);
+pros::Motor offloader(7);
 pros::ADIDigitalOut loader_piston('A');
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)

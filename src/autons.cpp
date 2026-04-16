@@ -379,71 +379,76 @@ void measure_offsets() {
 //tylers stuff below
 
 //tylers stuff below
-
-
-
 void full_auton() {
-  // Make sure piston starts retracted
-  loader_piston.set_value(false);
-  pros::delay(200);
-  // Forward 4 feet
-  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+
+
+  chassis.pid_drive_set(5_in, DRIVE_SPEED);
   chassis.pid_wait();
 
-  // Turn right 90 degrees
+  // Turn left 30 degrees (from 90, so target is 60)
+  chassis.pid_turn_set(60_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // Offload for 1.5 seconds (conveyor keeps running)
+  offloader.move(127);
+  pros::delay(1500);
+  offloader.move(0);  // Stop offloader
+
+  // Turn right 30 degrees (back to 90)
   chassis.pid_turn_set(90_deg, TURN_SPEED);
   chassis.pid_wait();
 
-  // Spin up conveyor for 2 seconds (load position)
-  conveyor.move(127);
-  pros::delay(2000);
-  conveyor.move(0);
-
-  // Reverse 4 feet
-  chassis.pid_drive_set(-48_in, DRIVE_SPEED, true);
+  // Forward 2.5 feet
+  chassis.pid_drive_set(30_in, DRIVE_SPEED, true);
   chassis.pid_wait();
 
-  // Offload into top goal (conveyor + offloader) for 1.5 sec
-  conveyor.move(127);
+  // Pause 2.5 seconds to load 6 balls (conveyor running, robot stationary)
+  pros::delay(2500);
+
+  // Reverse 2.5 feet while conveyor still running
+  chassis.pid_drive_set(-30_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  // Spin up offloader for 3 seconds (offload all 6 balls)
   offloader.move(127);
-  pros::delay(1500);
-  conveyor.move(0);
+  pros::delay(3000);
   offloader.move(0);
 
-  // Turn left 45 degrees
+  // Stop conveyor
+  conveyor.move(0);
+
+  // Turn left 45 degrees (from 90, so target is 45)
   chassis.pid_turn_set(45_deg, TURN_SPEED);
   chassis.pid_wait();
 
-  // Offload again for 1.5 sec
-  conveyor.move(127);
-  offloader.move(127);
-  pros::delay(1500);
-  conveyor.move(0);
-  offloader.move(0);
-
-  // Turn right 45 degrees (back to 90)
-  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  // Turn right 90 degrees to orient opposite 45 (from 45, so target is 135)
+  chassis.pid_turn_set(135_deg, TURN_SPEED);
   chassis.pid_wait();
 
-  // Forward 4 feet to loader
-  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  // Reverse 3 feet (driving in reverse parallel to original path)
+  chassis.pid_drive_set(-36_in, DRIVE_SPEED, true);
   chassis.pid_wait();
 
-  // Load 6 balls: conveyor + piston for 2 sec
-  conveyor.move(127);
-  loader_piston.set_value(true);
-  pros::delay(2000);
-  conveyor.move(0);
-  loader_piston.set_value(false);
-
-  // Reverse 4 feet
-  chassis.pid_drive_set(-48_in, DRIVE_SPEED, true);
+  // Forward 2 feet
+  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
   chassis.pid_wait();
 
-  // Offload all 6 balls
-  conveyor.move(127);
-  offloader.move(127);
-  pros::delay(4000);
-  conveyor.move(0);
-  offloader.move(0);
+  // Delay
+  pros::delay(500);
+
+  // Turn right 90 degrees
+  chassis.pid_turn_set(225_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // Forward 2 feet
+  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  // Turn right 90 degrees
+  chassis.pid_turn_set(315_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  // Forward 2 feet (place robot in front of 4 midline balls)
+  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
 }
